@@ -4,15 +4,15 @@ with open("README.md", "r") as f:
     long_description = f.read()
 
 setup(
-    name="edudata",
-    version=0.1,
+    name="edudata4ai",
+    version=0.2,
     author="Seulki.Kim",
     author_email="tmfrlska85@gmail.com",
     description="Datasets and Synthtic datasets generator for education",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     url="https://github.com/tmfrlska/edudata.git",
-    packages=find_packages(),
+    packages=['edudata'],
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
