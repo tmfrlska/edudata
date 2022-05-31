@@ -8,11 +8,11 @@ setup(
     version=0.2,
     author="Seulki.Kim",
     author_email="tmfrlska85@gmail.com",
-    description="Datasets and Synthtic datasets generator for education",
+    description="Datasets and Synthetic datasets generator for education",
     long_description=open('README.md').read(),
     long_description_content_type="text/markdown",
     url="https://github.com/tmfrlska/edudata.git",
-    packages=['edudata'],
+    packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
