@@ -3,7 +3,6 @@ import pandas as pd
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
 from edudata.method import Method, proper, smooth
-# global variables
 from edudata import NUM_COLS_DTYPES, CAT_COLS_DTYPES
 
 
@@ -32,7 +31,6 @@ class CARTMethod(Method):
         y = y_df.to_numpy()
         self.cart.fit(X, y)
 
-        # save the y distribution wrt trained tree nodes
         leaves = self.cart.apply(X)
         leaves_y_df = pd.DataFrame({'leaves': leaves, 'y': y})
         self.leaves_y_dict = leaves_y_df.groupby('leaves').apply(lambda x: x.to_numpy()[:, -1]).to_dict()

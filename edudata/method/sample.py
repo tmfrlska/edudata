@@ -2,7 +2,8 @@ import numpy as np
 
 from edudata.method import Method, proper, smooth
 # global variables
-from edudata import NUM_COLS_DTYPES
+from edudata import NUM_COLS_DTYPES, CAT_COLS_DTYPES
+
 
 
 class SampleMethod(Method):

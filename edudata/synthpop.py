@@ -10,12 +10,13 @@ from edudata.processor import NAN_KEY
 from edudata import NUM_COLS_DTYPES, CAT_COLS_DTYPES
 from edudata.method import CART_METHOD, METHODS_MAP, NA_METHODS
 
+from table_evaluator import load_data, TableEvaluator
 
 class Synthpop:
     def __init__(self,
                  method=None,
                  visit_sequence=None,
-                 # predictor_matrix=None,
+                 predictor_matrix=None,
                  proper=False,
                  cont_na=None,
                  smoothing=False,
@@ -35,7 +36,7 @@ class Synthpop:
         # initialise arguments
         self.method = method
         self.visit_sequence = visit_sequence
-        self.predictor_matrix = None
+        self.predictor_matrix = predictor_matrix
         self.proper = proper
         self.cont_na = cont_na
         self.smoothing = smoothing
@@ -50,18 +51,18 @@ class Synthpop:
 
         self.validator.check_init()
 
-    def fit(self, df, dtypes=None):
+    def fit(self, df, dtypes = None):
 
         self.df_columns = df.columns.tolist()
         self.n_df_rows, self.n_df_columns = np.shape(df)
+        dtypes = dtypes
 
         # (수정_추가)
         if dtypes is None:
-            dtypes = {}
             dtypes = {col: df.dtypes[col].name for col in self.df_columns}
-            for col, dtype in dtypes.items():
-                if dtype == 'object':
-                    dtypes[col] = 'category'
+            # for col, dtype in dtypes.items():
+            #     if dtype == 'object':
+            #         dtypes[col] = 'category'
 
         df = df.astype(dtypes)
         self.df_dtypes = dtypes
@@ -72,7 +73,6 @@ class Synthpop:
         processed_df = self.processor.preprocess(df, self.df_dtypes)
         self.processed_df_columns = processed_df.columns.tolist()
         self.n_processed_df_columns = len(self.processed_df_columns)
-
         # check fit
         self.validator.check_fit()
         # fit
@@ -124,9 +124,14 @@ class Synthpop:
         for col, visit_step in self.visit_sequence.sort_values().iteritems():
             col_method = self.saved_methods[col]
             col_predictors = self.predictor_matrix_columns[self.predictor_matrix.loc[col].to_numpy() == 1]
-            synth_df[col] = col_method.predict(synth_df[col_predictors])
 
-            if self.missing:
+            synth_df[col] = col_method.predict(synth_df[col_predictors])
+            #(수정_추가)
+            if col in self.numtocat:
+                #확인필요
+               synth_df[col] = synth_df[col].astype('category')
+
+            if self.missing :
                 if col in self.processor.processing_dict[NAN_KEY] and self.df_dtypes[col] in NUM_COLS_DTYPES and self.method[col] in NA_METHODS:
                     nan_indices = synth_df[self.processor.processing_dict[NAN_KEY][col]['col_nan_name']] != 0
                     synth_df.loc[nan_indices, col] = 0
@@ -136,26 +141,25 @@ class Synthpop:
                     synth_df[col] = synth_df[col].astype(int)
                 else:
                     synth_df[col] = synth_df[col].astype(self.df_dtypes[col])
-                    synth_df[col] = synth_df[col].round(2)
+                    # 경계에 있는 값들을 변화 시켜 pmse ratio에 큰 영향을 미침
+                    # synth_df[col] = round(synth_df[col], 2)
 
             print('{}_generated'.format(col))
 
         return synth_df
 
-    def compare(self, df, synth_df):
-        if len(df.columns) == len(synth_df.columns):
-            incomplete = 1
-        else:
-            incomplete = 0
+    def compare(self, df, synth, detail=False):
+        #(수정_추가)
+        assert set(synth.columns).issubset(set(df.columns)), "원데이터셋과 합성데이터셋을 확인해주세요."
 
         for col in df.columns:
             df.dropna(subset=[col], inplace=True)
             df.index = range(len(df))
             if self.missing:
-                synth_df.dropna(subset=[col], inplace=True)
-                synth_df.index = range(len(synth_df))
+                synth.dropna(subset=[col], inplace=True)
+                synth.index = range(len(synth))
 
-        synth_df_propen = synth_df.copy()
+        synth_df_propen = synth.copy()
         df_propen = df.copy()
 
         n1, n2 = (len(df_propen), len(synth_df_propen))
@@ -181,10 +185,7 @@ class Synthpop:
         logi_score = pd.Series([i[1] for i in proba_predict])
         logi_pmse = sum((logi_score - cc) ** 2) / N
 
-        if incomplete:
-            km = len(synth_df_propen.columns.tolist()) - 2
-        else:
-            km = len(synth_df_propen.columns.tolist()) - 1
+        km = len(synth_df_propen.columns.tolist())
 
         pmseexp = km * ((1 - cc) ** 2) * cc / N
         logi_s_pmse = logi_pmse / pmseexp
@@ -192,7 +193,7 @@ class Synthpop:
         print('pMSE Ratio : %.4f' % (logi_s_pmse))
 
         # 분포 시각화
-        features = synth_df.columns.tolist()
+        features = synth.columns.tolist()
         if len(features) < 3:
             nrows = 1
             ncols = len(features)
@@ -204,10 +205,14 @@ class Synthpop:
 
         for index, feature in enumerate(features):
             plt.subplot(nrows, ncols, index + 1)
-            plt.hist((df[feature], synth_df[feature]), histtype='bar', density=True, label=('Raw', 'Synth'))
+            plt.hist((df[feature], synth[feature]), histtype='bar', density=True, label=('Raw', 'Synth'))
             plt.xticks(rotation=90, size=7)
             plt.legend()
             plt.title(feature)
 
         plt.subplots_adjust(hspace=0.5, wspace=0.3)
         plt.show()
+
+        if detail :
+            table_evaluator = TableEvaluator(df, synth)
+            table_evaluator.visual_evaluation()

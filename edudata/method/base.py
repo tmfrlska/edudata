@@ -38,8 +38,6 @@ class Method(ABC):
                     X_df[col] = np.clip(X_df[col], 0, 1)
 
         if one_hot_cat_cols:
-            # Avoid the Dummy Variable Trap
-            # https://towardsdatascience.com/one-hot-encoding-multicollinearity-and-the-dummy-variable-trap-b5840be3c41a
             cat_cols = X_df.select_dtypes(CAT_COLS_DTYPES).columns.to_list()
             X_df = pd.get_dummies(X_df, columns=cat_cols, drop_first=True)
 
