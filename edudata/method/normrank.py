@@ -21,6 +21,7 @@ class NormRankMethod(NormMethod):
         residuals = z - self.norm.predict(X)
 
         if self.proper:
+            np.random.seed(self.random_state)
             # looks like proper is not working quite yet as it produces negative values for a strictly possitive column
 
             # Draws values of beta and sigma for Bayesian linear regression synthesis of y given x according to Rubin p.167
@@ -33,11 +34,12 @@ class NormRankMethod(NormMethod):
             self.sigma = np.sqrt(np.sum(residuals**2) / (self.n_rows - n_cols - 1))
 
         if self.smoothing:
-            y = smooth(self.dtype, y, y_real_min, y_real_max)
+            y = smooth(self.dtype, y, y_real_min, y_real_max, random_state=self.random_state)
 
         self.y_sorted = np.sort(y)
 
     def predict(self, X_test_df):
+        np.random.seed(self.random_state)
         X_test_df, _ = self.prepare_dfs(X_df=X_test_df, normalise_num_cols=True, one_hot_cat_cols=True, fit=False)
         n_test_rows = len(X_test_df)
 

@@ -20,7 +20,7 @@ class Processor:
     def preprocess(self, df, dtypes):
 
         for col in self.spop.visited_columns:
-            # 수정_추가_sample method에 결측치가 있으면 삭제
+            #(수정_추가_오류)
             if self.spop.method[col] == SAMPLE_METHOD:
                 df.dropna(subset=[col], inplace=True)
                 df.index = range(len(df))
@@ -39,7 +39,7 @@ class Processor:
 
                     not_nan_values = df.loc[col_not_nan_indices, col].copy()
 
-                    #수정_추가_
+                    #(수정_추가_오류)
                     df_cut = pd.cut(df.loc[col_not_nan_indices, col], self.spop.catgroups[col],
                                     labels=range(self.spop.catgroups[col]), include_lowest=True)
                     df_col = df.loc[col_not_nan_indices, col]
@@ -100,7 +100,7 @@ class Processor:
 
         return df
 
-    def postprocess(self, synth_df):
+    def postprocess(self, synth_df, random_state=None):
         #(수정)
         if self.spop.missing:
             for col, processing_nan_col_dict in self.processing_dict[NAN_KEY].items():
@@ -118,19 +118,22 @@ class Processor:
                 elif processing_nan_col_dict['dtype'] in NUM_COLS_DTYPES:
                     for col_nan_flag, col_nan_value in processing_nan_col_dict['nan_flags'].items():
                         nan_flag_indices = synth_df[processing_nan_col_dict['col_nan_name']] == col_nan_flag
-                        synth_df.loc[nan_flag_indices, col] = col_nan_value
+                        synth_df.loc[nan_flag_indices, col] = 0
                     synth_df.drop(columns=processing_nan_col_dict['col_nan_name'], inplace=True)
+
+            synth_df = synth_df.replace(0, np.nan)
 
                     # df.drop(columns=processing_nan_col_dict['col_nan_name'], inplace=True)
             #(수정_추가)
             if self.spop.missing is not True and self.spop.missing > 0:
                 count = 0
+                np.random.seed(random_state)
                 while round(len(synth_df)*len(synth_df.columns)*self.spop.missing) != count:
-                    r_l = random.randint(0, len(synth_df) - 1)
-                    c_l = random.randint(0, len(synth_df.columns) - 1)
-                    if synth_df.iloc[r_l, c_l] != np.nan:
-                        synth_df.iloc[r_l, c_l] = np.nan
-                        count += 1
+                    r_l = np.random.randint(0, len(synth_df) - 1)
+                    c_l = np.random.randint(0, len(synth_df.columns) - 1)
+                    synth_df.iloc[r_l, c_l] = np.nan
+                    count += 1
+                synth_df=synth_df.replace(0, np.nan)
 
 
         # else:
@@ -142,34 +145,36 @@ class Processor:
         #(수정_추가)
         if self.spop.outliers is True:
             temp_df = synth_df.copy()
+            np.random.seed(random_state)
             for i in range(round(len(synth_df)*len(synth_df.columns)*0.01)):
-                r_l = random.randint(0, len(synth_df)-1)
-                c_l = random.randint(0, len(synth_df.columns)-1)
+                r_l = np.random.randint(0, len(synth_df)-1)
+                c_l = np.random.randint(0, len(synth_df.columns)-1)
                 if synth_df.iloc[:, c_l].dtypes in['int64', 'float64']:
                     q1 = synth_df.iloc[:, c_l].quantile(0.25)
                     q3 = synth_df.iloc[:, c_l].quantile(0.75)
-                    if self.spop.school == 'e':
+                    if self.spop.numtype == 'int':
                         if i%2 == 0:
-                            temp_df.iloc[r_l, c_l] = round(q1 - random.uniform(3, 4)*(q3-q1))
+                            temp_df.iloc[r_l, c_l] = round(q1 - np.random.uniform(1.5, 2)*(q3-q1))
                         else:
-                            temp_df.iloc[r_l, c_l] = round(q3 + random.uniform(3, 4)*(q3-q1))
+                            temp_df.iloc[r_l, c_l] = round(q3 + np.random.uniform(1.5, 2)*(q3-q1))
                     else :
                         if i%2 == 0:
-                            temp_df.iloc[r_l, c_l] = round(q1 - random.uniform(3, 4)*(q3-q1), 2)
+                            temp_df.iloc[r_l, c_l] = round(q1 - np.random.uniform(1.5, 2)*(q3-q1), 2)
                         else:
-                            temp_df.iloc[r_l, c_l] = round(q3 + random.uniform(3, 4)*(q3-q1), 2)
+                            temp_df.iloc[r_l, c_l] = round(q3 + np.random.uniform(1.5, 2)*(q3-q1), 2)
 
             synth_df = temp_df.copy()
 
         elif self.spop.outliers > 0:
             temp_df = synth_df.copy()
+            np.random.seed(random_state)
             for i in range(round(len(synth_df)*len(synth_df.columns)*self.spop.outliers)):
                 r_l = random.randint(0, len(synth_df)-1)
-                c_l = random.randint(0, len(synth_df.ccontolumns)-1)
+                c_l = random.randint(0, len(synth_df.columns)-1)
                 if synth_df.iloc[:, c_l].dtypes in['int64', 'float64']:
                     q1 = synth_df.iloc[:, c_l].quantile(0.25)
                     q3 = synth_df.iloc[:, c_l].quantile(0.75)
-                    if self.spop.school == 'e':
+                    if self.spop.numtype == 'int':
                         if i % 2 == 0:
                             temp_df.iloc[r_l, c_l] = round(q1 - random.uniform(1.5, 2) * (q3 - q1))
                         else:

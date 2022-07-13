@@ -35,7 +35,7 @@ class Validator:
                                  'k': (NONE_TYPE, int),
                                  'missing': (bool, float),
                                  'outliers': (bool, float),
-                                 'school': (bool, str),
+                                 'numtype': (bool, str),
                                  'save': (bool, str)}
 
     def check_init(self):
@@ -175,7 +175,7 @@ class Validator:
             self.spop.visit_sequence = pd.Series([self.spop.visit_sequence.index(col) for col in self.spop.visited_columns], index=self.spop.visited_columns)
 
         if step == FIT_STEP:
-            #(수정_추가)
+            #(수정_추가_오류)
             for col in self.spop.visit_sequence.index:
                 if col in self.spop.processor.processing_dict[NAN_KEY] and self.spop.method[col] in NA_METHODS:
                     visit_step = self.spop.visit_sequence[col]
@@ -197,7 +197,7 @@ class Validator:
 
         if step == FIT_STEP:
             for col in self.spop.predictor_matrix:
-                #(수정_추가)
+                #(수정_추가문_오류)
                 if col in self.spop.processor.processing_dict[NAN_KEY] and self.spop.method[col] in NA_METHODS:
                     nan_col_index = self.spop.predictor_matrix.columns.get_loc(col)
                     self.spop.predictor_matrix.insert(nan_col_index, self.spop.processed_df_columns[self.spop.processed_df_columns.index(col)-1], self.spop.predictor_matrix[col])
@@ -239,15 +239,22 @@ class Validator:
         if step == PROCESSOR_STEP:
             if self.spop.smoothing is False:
                 self.spop.smoothing = {col: False for col in self.spop.df_columns}
+            #(수정문_추가_오류)
+            elif self.spop.smoothing is True:
+                assert self.spop.smoothing == True, \
+                    "smoothing에는 bool과 'density'만 입력 가능합니다."
+                self.spop.smoothing = {col: self.spop.df_dtypes[col] in NUM_COLS_DTYPES for col in self.spop.df_columns}
+
             elif isinstance(self.spop.smoothing, str):
                 assert self.spop.smoothing == DENSITY, \
-                    "smoothin에 문자열 입력시 'density'만 입력 가능합니다."
+                    "smoothing에는 bool과 'density'만 입력 가능합니다."
                 self.spop.smoothing = {col: self.spop.df_dtypes[col] in NUM_COLS_DTYPES for col in self.spop.df_columns}
             else:
-                assert all((smoothing_method == DENSITY and self.spop.df_dtypes[col] in NUM_COLS_DTYPES) or smoothing_method is False
+                assert all((smoothing_method == DENSITY and self.spop.df_dtypes[col] in NUM_COLS_DTYPES) or smoothing_method is False or smoothing_method is True
                            for col, smoothing_method in self.spop.smoothing.items()), \
-                    "smoothing에 Bool 입력시 합성하고자 하는 모든 열의 값을 입력하고 dictionary 입력시 합성하고자 하는 변수와과 bool 값을 입력해주세요. "
+                    "smoothing에 dictionary 입력시 합성하고자 하는 변수와 bool 값을 입력해주세요. "
                 self.spop.smoothing = {col: (self. spop.smoothing.get(col, False) == DENSITY and self.spop.df_dtypes[col] in NUM_COLS_DTYPES) for col in self.spop.df_columns}
+
 
         if step == FIT_STEP:
             for col in self.spop.processed_df_columns:
@@ -315,10 +322,10 @@ class Validator:
                 "missing은 Bool(원데이터의 결측치 반영) 혹은 임의로 만들고자 하는 결측치의 비율을 1보다 작은 float 형태로 입력해야 합니다."
 
             assert type(self.spop.outliers) is bool or type(self.spop.outliers) is float and self.spop.outliers > 0 and self.spop.outliers < 1, \
-                "outliers는 Bool(True: 10%) 혹은 임의로 만들고자 하는 outliers의 비율을 1보다 작은 float 형태로 입력해야 합니다."
+                "outliers는 Bool(True: 1%) 혹은 임의로 만들고자 하는 outliers의 비율을 1보다 작은 float 형태로 입력해야 합니다."
 
-            assert self.spop.school == False or self.spop.school == 'e', \
-                "school은 'e'(정수로 데이터 생성) 혹은 False(소수 둘째자리까지 데이터 생성)를 입력해야 합니다."
+            assert self.spop.numtype == False or self.spop.numtype == 'int', \
+                "numtype은 'int'(정수로 데이터 생성) 혹은 False(소수로 데이터 생성)를 입력해야 합니다."
 
             assert type(self.spop.save) is bool or type(self.spop.save) == str, \
                 "save는 True(synth.csv 저장), False(저장하지 않음), 문자열(문자열.csv 저장)을 입력해야 합니다."

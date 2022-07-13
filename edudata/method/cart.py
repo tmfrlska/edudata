@@ -5,7 +5,6 @@ from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 from edudata.method import Method, proper, smooth
 from edudata import NUM_COLS_DTYPES, CAT_COLS_DTYPES
 
-
 class CARTMethod(Method):
     def __init__(self, dtype, smoothing=False, proper=False, minibucket=5, random_state=None, *args, **kwargs):
         self.dtype = dtype
@@ -19,7 +18,7 @@ class CARTMethod(Method):
         if self.dtype in NUM_COLS_DTYPES:
             self.cart = DecisionTreeRegressor(min_samples_leaf=self.minibucket, random_state=self.random_state)
 
-    def fit(self, X_df, y_df):
+    def fit(self, X_df, y_df, random_state=None):
         if self.proper:
             X_df, y_df = proper(X_df=X_df, y_df=y_df, random_state=self.random_state)
 
@@ -46,9 +45,10 @@ class CARTMethod(Method):
         leaves_pred_index_df = pd.DataFrame({'leaves_pred': leaves_pred, 'index': range(len(leaves_pred))})
         leaves_pred_index_dict = leaves_pred_index_df.groupby('leaves_pred').apply(lambda x: x.to_numpy()[:, -1]).to_dict()
         for leaf, indices in leaves_pred_index_dict.items():
+            np.random.seed(self.random_state)
             y_pred[indices] = np.random.choice(self.leaves_y_dict[leaf], size=len(indices), replace=True)
 
         if self.smoothing and self.dtype in NUM_COLS_DTYPES:
-            y_pred = smooth(self.dtype, y_pred, self.y_real_min, self.y_real_max)
+            y_pred = smooth(self.dtype, y_pred, self.y_real_min, self.y_real_max, random_state=self.random_state)
 
         return y_pred

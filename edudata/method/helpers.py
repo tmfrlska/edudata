@@ -14,7 +14,7 @@ def proper(X_df=None, y_df=None, random_state=None):
         return X_df, y_df
 
 
-def smooth(dtype, y_synth, y_real_min, y_real_max):
+def smooth(dtype, y_synth, y_real_min, y_real_max, random_state=None):
     indices = [True for _ in range(len(y_synth))]
 
     y_synth_mode = mode(y_synth)
@@ -28,8 +28,7 @@ def smooth(dtype, y_synth, y_real_min, y_real_max):
         indices = np.logical_and(indices, y_synth != y_real_max)
 
     bw = 0.9 * len(y_synth[indices]) ** -1/5 * np.minimum(np.std(y_synth[indices]), iqr(y_synth[indices]) / 1.34)
-
-
+    np.random.seed(random_state)
     y_synth[indices] = np.array([np.random.normal(loc=value, scale=bw) for value in y_synth[indices]])
     if not top_coded:
         y_real_max += bw

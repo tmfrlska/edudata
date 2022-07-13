@@ -8,7 +8,7 @@ from edudata.processor import Processor
 
 from edudata.processor import NAN_KEY
 from edudata import NUM_COLS_DTYPES, CAT_COLS_DTYPES
-from edudata.method import CART_METHOD, METHODS_MAP, NA_METHODS
+from edudata.method import RANDOMFOREST_METHOD, CART_METHOD, METHODS_MAP, NA_METHODS
 
 from table_evaluator import load_data, TableEvaluator
 
@@ -20,13 +20,13 @@ class Synthpop:
                  proper=False,
                  cont_na=None,
                  smoothing=False,
-                 default_method=CART_METHOD,
+                 default_method=RANDOMFOREST_METHOD,
                  numtocat=None,
                  catgroups=None,
                  seed=None,
                  missing=False,
                  outliers=False,
-                 school=False,
+                 numtype=False,
                  save=False):
 
         # initialise the validator and processor
@@ -46,7 +46,7 @@ class Synthpop:
         self.seed = seed
         self.missing = missing
         self.outliers = outliers
-        self.school = school
+        self.numtype = numtype
         self.save = save
 
         self.validator.check_init()
@@ -60,9 +60,9 @@ class Synthpop:
         # (수정_추가)
         if dtypes is None:
             dtypes = {col: df.dtypes[col].name for col in self.df_columns}
-            # for col, dtype in dtypes.items():
-            #     if dtype == 'object':
-            #         dtypes[col] = 'category'
+            for col, dtype in dtypes.items():
+                if dtype == 'object':
+                    dtypes[col] = 'category'
 
         df = df.astype(dtypes)
         self.df_dtypes = dtypes
@@ -77,6 +77,7 @@ class Synthpop:
         self.validator.check_fit()
         # fit
         self._fit(processed_df)
+        print('training complete')
 
     def _fit(self, df):
         self.saved_methods = {}
@@ -104,18 +105,17 @@ class Synthpop:
             col_method.fit(X_df=df[col_predictors], y_df=df[col])
             self.saved_methods[col] = col_method
             # (수정)
-            print('{}_trained'.format(col))
+            # print('{}_trained'.format(col))
 
     def generate(self, k=None):
         self.k = k
-
         # check generate
         self.validator.check_generate()
         # generate
         synth_df = self._generate()
         # postprocess
-        processed_synth_df = self.processor.postprocess(synth_df)
-
+        processed_synth_df = self.processor.postprocess(synth_df, self.seed)
+        print('generating complete')
         return processed_synth_df
 
     def _generate(self):
@@ -137,18 +137,18 @@ class Synthpop:
                     synth_df.loc[nan_indices, col] = 0
 
             if self.df_dtypes[col] in NUM_COLS_DTYPES and synth_df[col].notna().any():
-                if self.school == 'e':
+                if self.numtype == 'int':
                     synth_df[col] = synth_df[col].astype(int)
                 else:
                     synth_df[col] = synth_df[col].astype(self.df_dtypes[col])
                     # 경계에 있는 값들을 변화 시켜 pmse ratio에 큰 영향을 미침
                     # synth_df[col] = round(synth_df[col], 2)
 
-            print('{}_generated'.format(col))
+            # print('{}_generated'.format(col))
 
         return synth_df
 
-    def compare(self, df, synth, detail=False):
+    def compare(self, df, synth, detail=False, visualize = True):
         #(수정_추가)
         assert set(synth.columns).issubset(set(df.columns)), "원데이터셋과 합성데이터셋을 확인해주세요."
 
@@ -190,29 +190,33 @@ class Synthpop:
         pmseexp = km * ((1 - cc) ** 2) * cc / N
         logi_s_pmse = logi_pmse / pmseexp
 
+        print('pMSE : %.4f' % (logi_pmse))
         print('pMSE Ratio : %.4f' % (logi_s_pmse))
 
         # 분포 시각화
-        features = synth.columns.tolist()
-        if len(features) < 3:
-            nrows = 1
-            ncols = len(features)
-        else:
-            nrows = round(len(features) / 3) + 1
-            ncols = 3
+        if visualize and detail is False:
+            features = synth.columns.tolist()
+            if len(features) < 3:
+                nrows = 1
+                ncols = len(features)
+            else:
+                nrows = round(len(features) / 3) + 1
+                ncols = 3
 
-        plt.figure(figsize=(18, nrows * 6), dpi=300)
+            plt.figure(figsize=(18, nrows * 6), dpi=300)
 
-        for index, feature in enumerate(features):
-            plt.subplot(nrows, ncols, index + 1)
-            plt.hist((df[feature], synth[feature]), histtype='bar', density=True, label=('Raw', 'Synth'))
-            plt.xticks(rotation=90, size=7)
-            plt.legend()
-            plt.title(feature)
+            for index, feature in enumerate(features):
+                plt.subplot(nrows, ncols, index + 1)
+                plt.hist((df[feature], synth[feature]), histtype='bar', density=True, label=('Raw', 'Synth'))
+                plt.xticks(rotation=90, size=7)
+                plt.legend()
+                plt.title(feature)
 
-        plt.subplots_adjust(hspace=0.5, wspace=0.3)
-        plt.show()
+            plt.subplots_adjust(hspace=0.5, wspace=0.3)
+            plt.show()
 
         if detail :
             table_evaluator = TableEvaluator(df, synth)
             table_evaluator.visual_evaluation()
+
+        return logi_pmse, logi_s_pmse

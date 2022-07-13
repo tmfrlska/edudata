@@ -5,7 +5,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="edudata4ai",
-    version=0.3.1,
+    version=0.4,
     author="Seulki.Kim",
     author_email="tmfrlska85@gmail.com",
     description="Datasets and Synthetic datasets generator for education",

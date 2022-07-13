@@ -27,6 +27,7 @@ class PolyregMethod(Method):
         self.polyreg.fit(X, y)
 
     def predict(self, X_test_df):
+        np.random.seed(self.random_state)
         X_test_df, _ = self.prepare_dfs(X_df=X_test_df, normalise_num_cols=True, one_hot_cat_cols=True, fit=False)
         n_test_rows = len(X_test_df)
 

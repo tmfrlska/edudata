@@ -30,6 +30,7 @@ class NormMethod(Method):
         residuals = y - self.norm.predict(X)
 
         if self.proper:
+            np.random.seed(self.random_state )
             # looks like proper is not working quite yet as it produces negative values for a strictly possitive column
 
             # Draws values of beta and sigma for Bayesian linear regression synthesis of y given x according to Rubin p.167
@@ -42,6 +43,7 @@ class NormMethod(Method):
             self.sigma = np.sqrt(np.sum(residuals**2) / (n_rows - n_cols - 1))
 
     def predict(self, X_test_df):
+        np.random.seed(self.random_state )
         X_test_df, _ = self.prepare_dfs(X_df=X_test_df, normalise_num_cols=True, one_hot_cat_cols=True, fit=False)
         n_test_rows = len(X_test_df)
 
@@ -49,6 +51,6 @@ class NormMethod(Method):
         y_pred = self.norm.predict(X_test) + np.random.normal(scale=self.sigma, size=n_test_rows)
 
         if self.smoothing:
-            y_pred = smooth(self.dtype, y_pred, self.y_real_min, self.y_real_max)
+            y_pred = smooth(self.dtype, y_pred, self.y_real_min, self.y_real_max, random_state=self.random_state)
 
         return y_pred

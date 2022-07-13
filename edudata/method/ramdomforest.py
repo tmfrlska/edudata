@@ -41,6 +41,7 @@ class RandomforestMethod(Method):
         self.leaves_y_dict = leaves_y_df.groupby('leaves').apply(lambda x: x.to_numpy()[:, -1]).to_dict()
 
     def predict(self, X_test_df):
+        np.random.seed(self.random_state)
         X_test_df, _ = self.prepare_dfs(X_df=X_test_df, normalise_num_cols=False, one_hot_cat_cols=True, fit=False)
         X_test = X_test_df.to_numpy()
         leaves_pred = [Counter(i).most_common(n=1)[0][0] for i in self.rf.apply(X_test)]
@@ -57,6 +58,6 @@ class RandomforestMethod(Method):
                 y_pred[indices] = np.random.choice(self.leaves_y_dict[temp], size=len(indices), replace=True)
 
         if self.smoothing and self.dtype in NUM_COLS_DTYPES:
-            y_pred = smooth(self.dtype, y_pred, self.y_real_min, self.y_real_max)
+            y_pred = smooth(self.dtype, y_pred, self.y_real_min, self.y_real_max, random_state=self.random_state)
 
         return y_pred

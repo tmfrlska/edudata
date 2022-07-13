@@ -36,7 +36,7 @@ NA_METHODS = (SAMPLE_METHOD, CART_METHOD, NORM_METHOD, NORMRANK_METHOD, POLYREG_
 #(수정_추가)
 PARAMETRIC_METHOD_MAP = {'int64': NORMRANK_METHOD,
                          'float64': NORMRANK_METHOD,
-                         'datetime': NORMRANK_METHOD,
+                         'datetime64[ns]': NORMRANK_METHOD,
                          'bool': POLYREG_METHOD,
                          'category': POLYREG_METHOD,
                          'object': POLYREG_METHOD
@@ -44,7 +44,7 @@ PARAMETRIC_METHOD_MAP = {'int64': NORMRANK_METHOD,
 
 CART_METHOD_MAP = {'int64': CART_METHOD,
                    'float64': CART_METHOD,
-                   'datetime': CART_METHOD,
+                   'datetime64[ns]': CART_METHOD,
                    'bool': CART_METHOD,
                    'category': CART_METHOD,
                    'object': CART_METHOD
@@ -52,7 +52,7 @@ CART_METHOD_MAP = {'int64': CART_METHOD,
 
 RANDOMFOREST_METHOD_MAP = {'int64': RANDOMFOREST_METHOD,
                    'float64': RANDOMFOREST_METHOD,
-                   'datetime': RANDOMFOREST_METHOD,
+                   'datetime64[ns]': RANDOMFOREST_METHOD,
                    'bool': RANDOMFOREST_METHOD,
                    'category': RANDOMFOREST_METHOD,
                    'object': RANDOMFOREST_METHOD
@@ -60,7 +60,7 @@ RANDOMFOREST_METHOD_MAP = {'int64': RANDOMFOREST_METHOD,
 
 SAMPLE_METHOD_MAP = {'int64': SAMPLE_METHOD,
                      'float64': SAMPLE_METHOD,
-                     'datetime': SAMPLE_METHOD,
+                     'datetime64[ns]': SAMPLE_METHOD,
                      'bool': SAMPLE_METHOD,
                      'category': SAMPLE_METHOD,
                      'object': SAMPLE_METHOD
