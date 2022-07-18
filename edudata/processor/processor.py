@@ -118,10 +118,10 @@ class Processor:
                 elif processing_nan_col_dict['dtype'] in NUM_COLS_DTYPES:
                     for col_nan_flag, col_nan_value in processing_nan_col_dict['nan_flags'].items():
                         nan_flag_indices = synth_df[processing_nan_col_dict['col_nan_name']] == col_nan_flag
-                        synth_df.loc[nan_flag_indices, col] = 0
+                        synth_df.loc[nan_flag_indices, col] = np.nan
                     synth_df.drop(columns=processing_nan_col_dict['col_nan_name'], inplace=True)
 
-            synth_df = synth_df.replace(0, np.nan)
+            # synth_df = synth_df.replace(0, np.nan)
 
                     # df.drop(columns=processing_nan_col_dict['col_nan_name'], inplace=True)
             #(수정_추가)

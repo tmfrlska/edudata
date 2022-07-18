@@ -1,0 +1,10 @@
+{"Channel": "category",
+ "Watch time(Minutes)": "int64",
+ "Stream time(minutes)": "int64",
+ "Peak viewers": "int64",
+ "Average viewers": "int64",
+ "Followers": "int64",
+ "Followers gained": "int64",
+ "Views gained": "int64",
+ "Partnered": "bool",
+ "Language": "category"}

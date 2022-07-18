@@ -215,7 +215,7 @@ class Synthpop:
             plt.show()
 
         if detail :
-            from table_evaluator import load_data, TableEvaluator
+            from table_evaluator import TableEvaluator
             table_evaluator = TableEvaluator(df, synth)
             table_evaluator.visual_evaluation()
 

@@ -7,8 +7,9 @@ with open("VERSION", "r") as f:
     version = f.read().strip()
 
 install_requires = [
-    'table_evaluator>=1.4.2'
-    ]  
+    'table_evaluator==1.4.2'
+    'seaborn-0.11.1==0.11.2'
+    ]
 
 setup(
     name="edudata4ai",
