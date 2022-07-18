@@ -16,7 +16,7 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/tmfrlska/edudata",
     packages=find_packages(where='edudata.datasets'),
-    package_dir={":src"},
+    package_dir={"":"edudata.datasets"},
     package_data={"": ["*.csv", "*.json"]},
     classifiers=[
         "Programming Language :: Python :: 3",
