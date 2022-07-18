@@ -3,5 +3,5 @@ include *.md
 include setup.py
 include LICENSE
 include requrements.txt 
-recursive-include edudata/datasets *.csv, *json
+recursive-include edudata/datasets *csv, *json
 

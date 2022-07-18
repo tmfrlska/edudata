@@ -7,10 +7,6 @@ with open("VERSION", "r") as f:
     version = f.read().strip()
 
 install_requires = [
-    'numpy>=1.17.3',
-    'pandas>=0.25.3',
-    'scipy>=1.3.1',
-    'scikit-learn>=0.22',
     'table_evaluator==1.4.2'
     ]  
 
