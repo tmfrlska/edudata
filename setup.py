@@ -3,15 +3,18 @@ from setuptools import setup, find_packages
 with open("README.md", "r") as f:
     long_description = f.read()
 
+with open("VERSION", "r") as f:
+    version = f.read().strip()  
+
 setup(
     name="edudata4ai",
-    version=0.5,
+    version=version,
     author="Seulki.Kim",
     author_email="tmfrlska85@gmail.com",
     description="Datasets and Synthetic datasets generator for education",
-    long_description=open('README.md').read(),
+    long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/tmfrlska/edudata.git",
+    url="https://github.com/tmfrlska/edudata",
     packages=find_packages(),
     classifiers=[
         "Programming Language :: Python :: 3",
