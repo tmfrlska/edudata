@@ -10,7 +10,6 @@ from edudata.processor import NAN_KEY
 from edudata import NUM_COLS_DTYPES, CAT_COLS_DTYPES
 from edudata.method import RANDOMFOREST_METHOD, CART_METHOD, METHODS_MAP, NA_METHODS
 
-from table_evaluator import load_data, TableEvaluator
 
 class Synthpop:
     def __init__(self,
@@ -216,6 +215,7 @@ class Synthpop:
             plt.show()
 
         if detail :
+            from table_evaluator import load_data, TableEvaluator
             table_evaluator = TableEvaluator(df, synth)
             table_evaluator.visual_evaluation()
 

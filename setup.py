@@ -7,7 +7,7 @@ with open("VERSION", "r") as f:
     version = f.read().strip()
 
 install_requires = [
-    'table_evaluator==1.4.2'
+    'table_evaluator>=1.4.2'
     ]  
 
 setup(
@@ -21,7 +21,7 @@ setup(
     url="https://github.com/tmfrlska/edudata",
     install_requires=install_requires,   
     packages=find_packages(),
-    package_data={'': ['datasets/*.csv', 'datasets/*.json']},
+    # package_data={'': ['datasets/*.csv', 'datasets/*.json']},
     include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
