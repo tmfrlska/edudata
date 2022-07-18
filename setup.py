@@ -8,7 +8,6 @@ with open("VERSION", "r") as f:
 
 install_requires = [
     'table_evaluator==1.4.2'
-    'seaborn-0.11.1==0.11.2'
     ]
 
 setup(
