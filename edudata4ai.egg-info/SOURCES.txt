@@ -36,4 +36,5 @@ edudata/validator/validator.py
 edudata4ai.egg-info/PKG-INFO
 edudata4ai.egg-info/SOURCES.txt
 edudata4ai.egg-info/dependency_links.txt
+edudata4ai.egg-info/requires.txt
 edudata4ai.egg-info/top_level.txt

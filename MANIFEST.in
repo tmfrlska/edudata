@@ -1,9 +1,7 @@
 include MANIFEST.in
 include *.md
 include setup.py
-include *.data
-include *.names
-recursive-include edudata/datasets/*.csv
-recursive-include edudata/datasets/*.json
+include LICENSE
+include requrements.txt 
+recursive-include edudata/datasets *.csv, *json
 
-global-exclude *.pyc
