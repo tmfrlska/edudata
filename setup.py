@@ -15,10 +15,8 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/tmfrlska/edudata",
-    packages=find_packages(where='edudata'),
-    package_dir={"":"edudata"},
-    package_data={"edudata":["*.py"],
-                "edudata.datasets":["*.csv", "*.json"]},
+    packages=find_packages(),
+    include_package_data=True,
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
