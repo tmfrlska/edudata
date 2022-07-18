@@ -3,7 +3,8 @@ include *.md
 include setup.py
 include *.data
 include *.names
-include edudatasets/*.json
-include edudatasets/*.csv
+include edudata/datasets/*.json
+include edudata/datasets/*.csv
+incluse edudata/*.py
 
 global-exclude *.pyc
