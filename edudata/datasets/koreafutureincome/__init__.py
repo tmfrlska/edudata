@@ -11,4 +11,4 @@ csv_path = str(data_folder / "koreafuture.csv")
 with dtypes_path.open('r') as f:
     dtypes = json.load(f)
 columns = list(dtypes.keys())
-df = pd.read_csv(csv_path, header=None, names=columns, encoding='cp949').astype(dtypes)
+df = pd.read_csv(csv_path, header=None, names=columns).astype(dtypes)

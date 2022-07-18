@@ -2,7 +2,7 @@
 "year":"int64",	
 "wave":"category",	
 "region":"category",	
-"income":"int64",		
+"income":"float64",		
 "family_member":"category",	
 "gender":"category",	
 "year_born":"int64",		
