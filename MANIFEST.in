@@ -1,9 +1,7 @@
 include MANIFEST.in
 include *.md
 include setup.py
-include *.data
-include *.names
-include edudata.datasets*.json
-include edudata.datasets*.csv
+include edudata/datasets/amongus/*.json
+include edudata/datasets/amongus/*.csv
 
 global-exclude *.pyc
