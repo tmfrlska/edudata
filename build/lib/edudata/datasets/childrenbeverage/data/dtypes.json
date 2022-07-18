@@ -1,0 +1,13 @@
+{
+    "음료이름":"category",
+    "제조사":"category", 
+    "중량":"category",  
+    "단위":"category",  
+    "알러지유발":"bool",   
+    "칼로리":"float64", 
+    "나트륨":"float64", 
+    "탄수화물":"float64",    
+    "당류":"float64",  
+    "포화지방":"float64",    
+    "단백질":"float64"
+}
