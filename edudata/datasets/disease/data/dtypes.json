@@ -1,5 +1,5 @@
 {
-    "날짜":"category",  
+    "날짜":"object",  
     "시도":"category",    
     "감기":"int64",    
     "피부염":"int64", 

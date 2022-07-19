@@ -1,4 +1,4 @@
-{"date": "category",
+{"date": "object",
  "mosquito": "float64",
  "rain(mm)": "float64",
  "mean_T(℃)": "float64",

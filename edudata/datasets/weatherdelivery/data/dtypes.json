@@ -1,6 +1,6 @@
 {"광역시도명": "category",
  "시군구명": "category",
- "날짜": "category",
+ "날짜": "object",
  "시간": "int64",
  "강수": "category",
  "%": "int64",

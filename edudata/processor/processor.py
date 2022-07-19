@@ -102,6 +102,7 @@ class Processor:
 
     def postprocess(self, synth_df, random_state=None):
         #(수정)
+
         if self.spop.missing:
             for col, processing_nan_col_dict in self.processing_dict[NAN_KEY].items():
                 if processing_nan_col_dict['dtype'] in CAT_COLS_DTYPES:
@@ -133,7 +134,6 @@ class Processor:
                     c_l = np.random.randint(0, len(synth_df.columns) - 1)
                     synth_df.iloc[r_l, c_l] = np.nan
                     count += 1
-                synth_df=synth_df.replace(0, np.nan)
 
 
         # else:
@@ -186,6 +186,7 @@ class Processor:
                             temp_df.iloc[r_l, c_l] = round(q3 + random.uniform(1.5, 2) * (q3 - q1), 2)
 
             synth_df = temp_df.copy()
+
 
         if self.spop.save is True:
             synth_df.to_csv('synth.csv')

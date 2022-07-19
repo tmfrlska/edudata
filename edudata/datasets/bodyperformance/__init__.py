@@ -5,7 +5,7 @@ import json
 
 data_folder = Path(__file__).resolve().parent / "data"
 dtypes_path = (data_folder / "dtypes.json")
-csv_path = str(data_folder / "bodyPerformance.csv")
+csv_path = str(data_folder / "bodyperformance.csv")
 
 
 with dtypes_path.open('r') as f:

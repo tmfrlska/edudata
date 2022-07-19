@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
+from table_evaluator import TableEvaluator
 
 from edudata.validator import Validator
 from edudata.processor import Processor
@@ -59,22 +60,18 @@ class Synthpop:
         # (수정_추가)
         if dtypes is None:
             dtypes = {col: df.dtypes[col].name for col in self.df_columns}
-            for col, dtype in dtypes.items():
-                if dtype == 'object':
-                    dtypes[col] = 'category'
+            # for col, dtype in dtypes.items():
+            #     if dtype == 'object':
+            #         dtypes[col] = 'category'
 
         df = df.astype(dtypes)
         self.df_dtypes = dtypes
 
-        # check processor
         self.validator.check_processor()
-        # preprocess
         processed_df = self.processor.preprocess(df, self.df_dtypes)
         self.processed_df_columns = processed_df.columns.tolist()
         self.n_processed_df_columns = len(self.processed_df_columns)
-        # check fit
         self.validator.check_fit()
-        # fit
         self._fit(processed_df)
         print('training complete')
 
@@ -115,6 +112,7 @@ class Synthpop:
         # postprocess
         processed_synth_df = self.processor.postprocess(synth_df, self.seed)
         print('generating complete')
+
         return processed_synth_df
 
     def _generate(self):
@@ -125,25 +123,22 @@ class Synthpop:
             col_predictors = self.predictor_matrix_columns[self.predictor_matrix.loc[col].to_numpy() == 1]
 
             synth_df[col] = col_method.predict(synth_df[col_predictors])
-            #(수정_추가)
-            if col in self.numtocat:
-                #확인필요
-               synth_df[col] = synth_df[col].astype('category')
 
-            if self.missing :
-                if col in self.processor.processing_dict[NAN_KEY] and self.df_dtypes[col] in NUM_COLS_DTYPES and self.method[col] in NA_METHODS:
-                    nan_indices = synth_df[self.processor.processing_dict[NAN_KEY][col]['col_nan_name']] != 0
-                    synth_df.loc[nan_indices, col] = 0
+            if col in self.numtocat:
+                synth_df[col] = synth_df[col].astype('category')
 
             if self.df_dtypes[col] in NUM_COLS_DTYPES and synth_df[col].notna().any():
                 if self.numtype == 'int':
                     synth_df[col] = synth_df[col].astype(int)
                 else:
                     synth_df[col] = synth_df[col].astype(self.df_dtypes[col])
-                    # 경계에 있는 값들을 변화 시켜 pmse ratio에 큰 영향을 미침
-                    # synth_df[col] = round(synth_df[col], 2)
+            elif self.df_dtypes[col] in CAT_COLS_DTYPES and synth_df[col].notna().any():
+                synth_df[col] = synth_df[col].astype(self.df_dtypes[col])
 
-            # print('{}_generated'.format(col))
+            if self.missing :
+                if col in self.processor.processing_dict[NAN_KEY] and self.df_dtypes[col] in NUM_COLS_DTYPES and self.method[col] in NA_METHODS:
+                    nan_indices = synth_df[self.processor.processing_dict[NAN_KEY][col]['col_nan_name']] != 0
+                    synth_df.loc[nan_indices, col] = np.nan
 
         return synth_df
 
@@ -215,7 +210,12 @@ class Synthpop:
             plt.show()
 
         if detail :
-            from table_evaluator import TableEvaluator
+            for col in df.columns:
+                if df.dtypes[col].name == 'category':
+                    df[col] = df[col].astype('object')
+                if synth.dtypes[col].name == 'category':
+                    synth[col] = synth[col].astype('object')
+
             table_evaluator = TableEvaluator(df, synth)
             table_evaluator.visual_evaluation()
 
