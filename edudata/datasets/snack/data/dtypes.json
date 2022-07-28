@@ -1,0 +1,12 @@
+{"음식의 이름": "category",
+ "식품 제조사": "category",
+ "중량": "float64",
+ "단위": "category",
+ "알러지유발": "category",
+ "칼로리": "float64",
+ "나트륨": "int64",
+ "탄수화물": "float64",
+ "당류": "float64",
+ "포화지방": "float64",
+ "단백질": "float64",
+ "음식사진": "category"}
