@@ -130,8 +130,8 @@ class Processor:
                 count = 0
                 np.random.seed(random_state)
                 while round(len(synth_df)*len(synth_df.columns)*self.spop.missing) != count:
-                    r_l = np.random.randint(0, len(synth_df) - 1)
-                    c_l = np.random.randint(0, len(synth_df.columns) - 1)
+                    r_l = np.random.randint(0, len(synth_df))
+                    c_l = np.random.randint(0, len(synth_df.columns))
                     synth_df.iloc[r_l, c_l] = np.nan
                     count += 1
 
@@ -147,8 +147,8 @@ class Processor:
             temp_df = synth_df.copy()
             np.random.seed(random_state)
             for i in range(round(len(synth_df)*len(synth_df.columns)*0.01)):
-                r_l = np.random.randint(0, len(synth_df)-1)
-                c_l = np.random.randint(0, len(synth_df.columns)-1)
+                r_l = np.random.randint(0, len(synth_df))
+                c_l = np.random.randint(0, len(synth_df.columns))
                 if synth_df.iloc[:, c_l].dtypes in['int64', 'float64']:
                     q1 = synth_df.iloc[:, c_l].quantile(0.25)
                     q3 = synth_df.iloc[:, c_l].quantile(0.75)
