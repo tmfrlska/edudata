@@ -1,0 +1,15 @@
+{
+"year":"int64",	
+"wave":"category",	
+"region":"category",	
+"income":"int64",		
+"family_member":"category",	
+"gender":"category",	
+"year_born":"int64",		
+"education_level":"category",	
+"marriage":"category",	
+"religion":"category",	
+"occupation":"category",	
+"company_size":"category",	
+"reason_none_worker":"category"
+}
