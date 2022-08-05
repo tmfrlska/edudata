@@ -2,7 +2,6 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LogisticRegression
 import matplotlib.pyplot as plt
-from table_evaluator import TableEvaluator
 
 from edudata.validator import Validator
 from edudata.processor import Processor
@@ -216,6 +215,7 @@ class Synthpop:
                 if synth.dtypes[col].name == 'category':
                     synth[col] = synth[col].astype('object')
 
+            from table_evaluator import TableEvaluator
             table_evaluator = TableEvaluator(df, synth)
             table_evaluator.visual_evaluation()
 
