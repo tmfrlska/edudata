@@ -1,0 +1,12 @@
+{
+    "이름":"category",
+    "성별":"category",
+    "눈색깔":"category",
+    "인종":"category",
+    "머리색깔":"category",
+    "키":"int64",
+    "출판사":"category",
+    "피부색":"category",
+    "진영":"category",
+    "몸무게":"int64"
+}
