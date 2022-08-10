@@ -1,9 +1,0 @@
-{
-    "Team":"category",
-    "Outcome":"category", 
-    "TaskCompleted":"int64", 
-    "AllTasksCompleted":"category",
-    "Murdered":"category",
-    "ImposterKills":"int64",
-    "SabotagesFixed":"int64"
-}
