@@ -13,7 +13,4 @@ with dtypes_path.open('r') as f:
     dtypes = json.load(f)
 columns = list(dtypes.keys())
 
-if platform.system() == 'Darwin':
-    df = pd.read_csv(csv_path, header=None, names=columns).astype(dtypes)
-else:
-    df = pd.read_csv(csv_path, header=None, names=columns, encoding='cp949').astype(dtypes)
+df = pd.read_csv(csv_path, header=None, names=columns, encoding='UTF8').astype(dtypes)

@@ -11,4 +11,4 @@ csv_path = str(data_folder / "pokemon.csv")
 with dtypes_path.open('rt', encoding='UTF8') as f:
     dtypes = json.load(f)
 columns = list(dtypes.keys())
-df = pd.read_csv(csv_path, header=None, names=columns,encoding='UTF8').astype(dtypes)
+df = pd.read_csv(csv_path, header=None, names=columns, encoding='UTF8').astype(dtypes)
