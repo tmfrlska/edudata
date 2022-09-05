@@ -129,11 +129,12 @@ class Processor:
             if self.spop.missing is not True and self.spop.missing > 0:
                 count = 0
                 np.random.seed(random_state)
-                while round(len(synth_df)*len(synth_df.columns)*self.spop.missing) != count:
+                while round(len(synth_df)*len(synth_df.columns)*self.spop.missing) >= count:
                     r_l = np.random.randint(0, len(synth_df))
                     c_l = np.random.randint(0, len(synth_df.columns))
-                    synth_df.iloc[r_l, c_l] = np.nan
-                    count += 1
+                    if synth_df.iloc[r_l, c_l] is not np.nan:
+                        synth_df.iloc[r_l, c_l] = np.nan
+                        count += 1
 
 
         # else:

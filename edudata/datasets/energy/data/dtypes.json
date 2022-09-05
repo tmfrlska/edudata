@@ -6,7 +6,6 @@
  "Sector-Total": "int64",
  "Type-Coal": "int64",
  "Type-Oil": "int64",
- "Type-NaturalGas": "int64",
  "Type-CityGas": "int64",
  "Type-Electricty": "int64",
  "Type-Heat": "int64",
