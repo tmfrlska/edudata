@@ -1,0 +1,12 @@
+{"게임명": "category",
+ "플랫폼": "category",
+ "출시년도": "category",
+ "장르": "category",
+ "배포사": "category",
+ "판매량(millions)": "float64",
+ "메타크리틱점수": "int64",
+ "메타크리틱참여자": "int64",
+ "유저점수": "float64",
+ "유저참여자": "int64",
+ "개발사": "category",
+ "등급": "category"}

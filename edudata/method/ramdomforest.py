@@ -10,7 +10,7 @@ from edudata import NUM_COLS_DTYPES, CAT_COLS_DTYPES
 
 
 class RandomforestMethod(Method):
-    def __init__(self, dtype, smoothing=False, proper=False, n_estimators=30, max_depth=10, random_state=None, *args, **kwargs):
+    def __init__(self, dtype, smoothing=False, proper=False, n_estimators=5, max_depth=70, random_state=None, *args, **kwargs):
         self.dtype = dtype
         self.smoothing = smoothing
         self.proper = proper
