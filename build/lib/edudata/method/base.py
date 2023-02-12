@@ -46,10 +46,8 @@ class Method(ABC):
 
             else:
                 test_cols = X_df.columns.tolist()
-                missing_cols = set(self.train_cols) - set(test_cols)
-                for col in missing_cols:
-                    X_df[col] = 0
-
+                missing_cols = list(set(self.train_cols) - set(test_cols))
+                X_df[missing_cols] = 0
                 X_df = X_df[self.train_cols]
 
         return X_df, y_df

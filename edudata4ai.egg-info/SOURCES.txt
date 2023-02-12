@@ -11,9 +11,6 @@ edudata/datasets/ageculture/data/dtypes.json
 edudata/datasets/amongus/__init__.py
 edudata/datasets/amongus/data/amongus.csv
 edudata/datasets/amongus/data/dtypes.json
-edudata/datasets/amongus_m/__init__.py
-edudata/datasets/amongus_m/data/amongus.csv
-edudata/datasets/amongus_m/data/dtypes.json
 edudata/datasets/bakerysales/__init__.py
 edudata/datasets/bakerysales/data/bakerysales.csv
 edudata/datasets/bakerysales/data/bakerysales_eng.csv
@@ -21,9 +18,6 @@ edudata/datasets/bakerysales/data/dtypes.json
 edudata/datasets/baseball/__init__.py
 edudata/datasets/baseball/data/baseball.csv
 edudata/datasets/baseball/data/dtypes.json
-edudata/datasets/baseball_m/__init__.py
-edudata/datasets/baseball_m/data/baseball.csv
-edudata/datasets/baseball_m/data/dtypes.json
 edudata/datasets/bodyperformance/__init__.py
 edudata/datasets/bodyperformance/data/bodyperformance.csv
 edudata/datasets/bodyperformance/data/dtypes.json
@@ -45,10 +39,7 @@ edudata/datasets/energy/data/energy.csv
 edudata/datasets/eplresults/__init__.py
 edudata/datasets/eplresults/data/dtypes.json
 edudata/datasets/eplresults/data/eplresults.csv
-edudata/datasets/eplresults_m/__init__.py
-edudata/datasets/eplresults_m/data/dtypes.json
-edudata/datasets/eplresults_m/data/eplresults.csv
-edudata/datasets/eplresults_m/data/eplresults_entry.csv
+edudata/datasets/eplresults/data/eplresults_entry.csv
 edudata/datasets/health/__init__.py
 edudata/datasets/health/data/dtypes.json
 edudata/datasets/health/data/health.csv
@@ -59,9 +50,6 @@ edudata/datasets/heroesinformation/data/heroesinformation.csv
 edudata/datasets/lolgame/__init__.py
 edudata/datasets/lolgame/data/dtypes.json
 edudata/datasets/lolgame/data/lolgame.csv
-edudata/datasets/lolgame_m/__init__.py
-edudata/datasets/lolgame_m/data/dtypes.json
-edudata/datasets/lolgame_m/data/lolgame.csv
 edudata/datasets/mbti/__init__.py
 edudata/datasets/mbti/data/dtypes.json
 edudata/datasets/mbti/data/mbti.csv
