@@ -141,6 +141,64 @@ class Synthpop:
 
         return synth_df
 
+    def missing_df(self, df):
+        assert self.missing is not False, 'missing attribute에 0보다 크고 1보다 작은 비율값을 입력해주세요.'
+        count = 0
+        np.random.seed(self.seed)
+        temp_df = df.copy()
+        if self.missing == 1:
+            return temp_df
+        else:
+            while round(len(df) * len(df.columns) * self.missing) >= count:
+                r_l = np.random.randint(0, len(df))
+                c_l = np.random.randint(0, len(df.columns))
+                if temp_df.iloc[r_l, c_l] is not np.nan:
+                    temp_df.iloc[r_l, c_l] = np.nan
+                    count += 1
+            return temp_df
+
+    def outliers_df(self, df):
+        assert self.outliers is not False, 'outliers attribute에 0보다 크고 1보다 작은 비율값을 입력해주세요.'
+        temp_df = df.copy()
+        np.random.seed(self.seed)
+        if self.outliers is True:
+            for i in range(round(len(df)*len(df.columns)*0.01)):
+                r_l = np.random.randint(0, len(df))
+                c_l = np.random.randint(0, len(df.columns))
+                if df.iloc[:, c_l].dtypes in['int64', 'float64']:
+                    q1 = df.iloc[:, c_l].quantile(0.25)
+                    q3 = df.iloc[:, c_l].quantile(0.75)
+                    if self.numtype == 'int':
+                        if i%2 == 0:
+                            temp_df.iloc[r_l, c_l] = round(q1 - np.random.uniform(1.5, 2)*(q3-q1))
+                        else:
+                            temp_df.iloc[r_l, c_l] = round(q3 + np.random.uniform(1.5, 2)*(q3-q1))
+                    else :
+                        if i%2 == 0:
+                            temp_df.iloc[r_l, c_l] = round(q1 - np.random.uniform(1.5, 2)*(q3-q1), 2)
+                        else:
+                            temp_df.iloc[r_l, c_l] = round(q3 + np.random.uniform(1.5, 2)*(q3-q1), 2)
+            return temp_df
+
+        elif self.outliers > 0:
+            for i in range(round(len(df) * len(df.columns) * self.outliers)):
+                r_l = np.random.randint(0, len(df) - 1)
+                c_l = np.random.randint(0, len(df.columns) - 1)
+                if df.iloc[:, c_l].dtypes in ['int64', 'float64']:
+                    q1 = df.iloc[:, c_l].quantile(0.25)
+                    q3 = df.iloc[:, c_l].quantile(0.75)
+                    if self.numtype == 'int':
+                        if i % 2 == 0:
+                            temp_df.iloc[r_l, c_l] = round(q1 - np.random.uniform(1.5, 2) * (q3 - q1))
+                        else:
+                            temp_df.iloc[r_l, c_l] = round(q3 + np.random.uniform(1.5, 2) * (q3 - q1))
+                    else:
+                        if i % 2 == 0:
+                            temp_df.iloc[r_l, c_l] = round(q1 - np.random.uniform(1.5, 2) * (q3 - q1), 2)
+                        else:
+                            temp_df.iloc[r_l, c_l] = round(q3 + np.random.uniform(1.5, 2) * (q3 - q1), 2)
+            return temp_df
+
     def compare(self, df, synth, detail=False, visualize = True):
         #(수정_추가)
         assert set(synth.columns).issubset(set(df.columns)), "원데이터셋과 합성데이터셋을 확인해주세요."
