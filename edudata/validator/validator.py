@@ -117,7 +117,7 @@ class Validator:
                                     for col in self.spop.df_columns]
 
             else:
-                for col, visit_order in self.spop.visit_sequence.sort_values().iteritems():
+                for col, visit_order in self.spop.visit_sequence.sort_values().items():
                     col_method = self.spop.method[self.spop.df_columns.index(col)]
                     if col_method != EMPTY_METHOD:
                         assert col_method == SAMPLE_METHOD, \
@@ -191,7 +191,7 @@ class Validator:
             self.spop.predictor_matrix = np.zeros([len(self.spop.visit_sequence), len(self.spop.visit_sequence)], dtype=int)
             self.spop.predictor_matrix = pd.DataFrame(self.spop.predictor_matrix, index=self.spop.visit_sequence.index, columns=self.spop.visit_sequence.index)
             visited_columns = []
-            for col, _ in self.spop.visit_sequence.sort_values().iteritems():
+            for col, _ in self.spop.visit_sequence.sort_values().items():
                 self.spop.predictor_matrix.loc[col, visited_columns] = 1
                 visited_columns.append(col)
 

@@ -93,7 +93,7 @@ class Synthpop:
 
         self.predictor_matrix_columns = self.predictor_matrix.columns.to_numpy()
 
-        for col, visit_step in self.visit_sequence.sort_values().iteritems():
+        for col, visit_step in self.visit_sequence.sort_values().items():
             col_method = METHODS_MAP[self.method[col]](dtype=self.df_dtypes[col], smoothing=self.smoothing[col],
                                                        proper=self.proper, random_state=self.seed)
             col_predictors = self.predictor_matrix_columns[self.predictor_matrix.loc[col].to_numpy() == 1]
@@ -117,7 +117,7 @@ class Synthpop:
     def _generate(self):
         synth_df = pd.DataFrame(data=np.zeros([self.k, len(self.visit_sequence)]), columns=self.visit_sequence.index)
 
-        for col, visit_step in self.visit_sequence.sort_values().iteritems():
+        for col, visit_step in self.visit_sequence.sort_values().items():
             col_method = self.saved_methods[col]
             col_predictors = self.predictor_matrix_columns[self.predictor_matrix.loc[col].to_numpy() == 1]
 
