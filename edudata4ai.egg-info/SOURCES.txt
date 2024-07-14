@@ -72,6 +72,9 @@ edudata/datasets/pokemon/data/pokemon.csv
 edudata/datasets/sensorytemp/__init__.py
 edudata/datasets/sensorytemp/data/dtypes.json
 edudata/datasets/sensorytemp/data/temperature.csv
+edudata/datasets/student/__init__.py
+edudata/datasets/student/data/dtypes.json
+edudata/datasets/student/data/student.csv
 edudata/datasets/travelplan/__init__.py
 edudata/datasets/travelplan/data/dtypes.json
 edudata/datasets/travelplan/data/travelplan.csv
