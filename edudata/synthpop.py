@@ -199,7 +199,36 @@ class Synthpop:
                             temp_df.iloc[r_l, c_l] = round(q3 + np.random.uniform(1.5, 2) * (q3 - q1), 2)
             return temp_df
 
-    def compare(self, df, synth, detail=False, visualize = True):
+    def compare(self, df, synth, visualize=True, **kwargs):
+        """
+        원본 데이터와 합성 데이터를 비교하여 pMSE 및 pMSE Ratio를 계산합니다.
+        
+        Parameters:
+        -----------
+        df : pandas.DataFrame
+            원본 데이터셋
+        synth : pandas.DataFrame
+            합성 데이터셋
+        visualize : bool, default=True
+            분포 시각화 여부
+        **kwargs : dict
+            추가 매개변수 (하위 호환성을 위해 유지)
+            
+        Returns:
+        --------
+        tuple : (pMSE, pMSE_ratio)
+            
+        Note:
+        -----
+        table_evaluator 라이브러리는 의존성 충돌로 인해 비활성화되었습니다.
+        상세한 평가가 필요한 경우 별도로 table_evaluator를 설치하여 사용하세요.
+        """
+        
+        # detail 매개변수 사용 시 경고
+        if 'detail' in kwargs:
+            print("경고: detail 매개변수는 table_evaluator 의존성 제거로 인해 비활성화되었습니다.")
+            print("기본 시각화만 제공됩니다.")
+        
         #(수정_추가)
         assert set(synth.columns).issubset(set(df.columns)), "원데이터셋과 합성데이터셋을 확인해주세요."
 
@@ -244,8 +273,8 @@ class Synthpop:
         print('pMSE : %.4f' % (logi_pmse))
         print('pMSE Ratio : %.4f' % (logi_s_pmse))
 
-        # 분포 시각화
-        if visualize and detail is False:
+        # 기본 분포 시각화 (table_evaluator 대신 matplotlib 사용)
+        if visualize:
             features = synth.columns.tolist()
             if len(features) < 3:
                 nrows = 1
@@ -266,15 +295,20 @@ class Synthpop:
             plt.subplots_adjust(hspace=0.5, wspace=0.3)
             plt.show()
 
-        if detail :
-            for col in df.columns:
-                if df.dtypes[col].name == 'category':
-                    df[col] = df[col].astype('object')
-                if synth.dtypes[col].name == 'category':
-                    synth[col] = synth[col].astype('object')
-
-            from table_evaluator import TableEvaluator
-            table_evaluator = TableEvaluator(df, synth)
-            table_evaluator.visual_evaluation()
+        # table_evaluator 기능은 의존성 충돌로 인해 비활성화됨
+        # 필요시 별도 설치 후 다음 코드 활성화:
+        # 
+        # try:
+        #     from table_evaluator import TableEvaluator
+        #     if kwargs.get('detail', False):
+        #         for col in df.columns:
+        #             if df.dtypes[col].name == 'category':
+        #                 df[col] = df[col].astype('object')
+        #             if synth.dtypes[col].name == 'category':
+        #                 synth[col] = synth[col].astype('object')
+        #         table_evaluator = TableEvaluator(df, synth)
+        #         table_evaluator.visual_evaluation()
+        # except ImportError:
+        #     print("table_evaluator가 설치되지 않았습니다. 기본 시각화만 제공됩니다.")
 
         return logi_pmse, logi_s_pmse

@@ -1,5 +1,6 @@
 include *.md
 include LICENSE
+include VERSION
 recursive-include edudata/datasets *.csv *.json
 include MANIFEST.in
 

@@ -7,7 +7,12 @@ with open("VERSION", "r") as f:
     version = f.read().strip()
 
 install_requires = [
-    'table_evaluator==1.4.2'
+    'numpy>=1.17.3',
+    'pandas>=0.25.3',
+    'scipy>=1.3.1',
+    'scikit-learn>=0.22',
+    # 'table_evaluator>=1.4.2',  # 의존성 충돌로 인해 주석처리
+    'seaborn>=0.11.2'
     ]
 
 setup(
